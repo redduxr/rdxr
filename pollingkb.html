@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Keyboard Polling Rate Tester</title>
+	<title>Testor de frecvență a tastaturii</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
@@ -10,35 +10,40 @@
 			margin: 0;
 			padding: 0;
 		}
-		
 		.container {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			height: 100vh;
-		}
-		
-		.instruction {
-			font-size: 1.5rem;
-			margin-bottom: 1rem;
-		}
-		
-		.result {
-			font-size: 2rem;
-			font-weight: bold;
-			margin-top: 1rem;
-		}
-		
-		.highest {
-			font-size: 1rem;
-			margin-top: 0.5rem;
-		}
-	</style>
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+	}
+	
+	.instruction {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+	}
+	
+	.result {
+		font-size: 2rem;
+		font-weight: bold;
+		margin-top: 1rem;
+	}
+	
+	.highest {
+		font-size: 1rem;
+		margin-top: 0.5rem;
+	}
+
+	.signature {
+		font-size: 1rem;
+		margin-top: 2rem;
+		text-align: center;
+	}
+</style>
 </head>
 <body>
 	<div class="container">
-		<div class="instruction">Press any key to test your keyboard's polling rate</div>
+		<div class="instruction">Apăsați orice tastă pentru a testa frecvența tastaturii</div>
 		<div class="result"></div>
 		<div class="highest"></div>
 	</div>
@@ -49,40 +54,39 @@
 		var highestPollingRate = 0;
 		var resultElement = document.querySelector('.result');
 		var highestElement = document.querySelector('.highest');
-		
 		document.addEventListener('keydown', function(e) {
-			if (!startTime) {
-				startTime = performance.now();
-				pollingRate = null;
-				resultElement.innerHTML = 'Testing...';
-			}
-		});
-		
-		document.addEventListener('keyup', function(e) {
-			if (!endTime) {
-				endTime = performance.now();
-				var elapsed = endTime - startTime;
-				pollingRate = Math.round(1000 / elapsed);
-				if (pollingRate > highestPollingRate) {
-					highestPollingRate = pollingRate;
-					highestElement.innerHTML = 'Highest polling rate recorded: ' + highestPollingRate + ' Hz';
-				}
-				resultElement.innerHTML = 'Your keyboard\'s polling rate is ' + pollingRate + ' Hz';
-			}
+		if (!startTime) {
 			startTime = performance.now();
-			endTime = null;
-			setTimeout(scanPollingRate, 1000);
-		});
-		
-		function scanPollingRate() {
-			if (pollingRate) {
-				resultElement.innerHTML = 'Your keyboard\'s polling rate is ' + pollingRate + ' Hz';
-			} else {
-				resultElement.innerHTML = 'Press any key to test your keyboard\'s polling rate';
-			}
-			highestElement.innerHTML = 'Highest polling rate recorded: ' + highestPollingRate + ' Hz';
-			setTimeout(scanPollingRate, 1000);
+			pollingRate = null;
+			resultElement.innerHTML = 'Se testează...';
 		}
-	</script>
+	});
+	
+	document.addEventListener('keyup', function(e) {
+		if (!endTime) {
+			endTime = performance.now();
+			var elapsed = endTime - startTime;
+			pollingRate = Math.round(1000 / elapsed);
+			if (pollingRate > highestPollingRate) {
+				highestPollingRate = pollingRate;
+				highestElement.innerHTML = 'Cea mai mare frecvență înregistrată: ' + highestPollingRate + ' Hz';
+			}
+			resultElement.innerHTML = 'Frecvența tastaturii dvs. este ' + pollingRate + ' Hz';
+		}
+		startTime = performance.now();
+		endTime = null;
+	});
+	
+	function scanPollingRate() {
+		if (pollingRate) {
+			resultElement.innerHTML = 'Frecvența tastaturii dvs. este ' + pollingRate + ' Hz';
+		} else {
+			resultElement.innerHTML = 'Apăsați orice tastă pentru a testa frecvența tastaturii';
+		}
+		highestElement.innerHTML = 'Cea mai mare frecvență înregistrată: ' + highestPollingRate + ' Hz';
+		setTimeout(scanPollingRate, 1000);
+	}
+	scanPollingRate();
+</script>
 </body>
 </html>

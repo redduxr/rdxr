@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testare Rată Sondaj Mouse</title>
+  <style>
+    body {
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 36px;
+    }
+    p {
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Testare Rată Sondaj Mouse</h1>
+  <p>Mutați mouse-ul pentru a testa continuu rata sa de sondaj.</p>
+  <button id="startBtn">Începeți Testul</button>
+  <button id="stopBtn" disabled>Oprește Testul</button>
+  <p id="result"></p>
+
+  <script>
+    var isTesting = false;
+    var startTime;
+    var endTime;
+    var pollingRateInterval;
+
+    function startTest() {
+      if (!isTesting) {
+        isTesting = true;
+        document.getElementById("startBtn").disabled = true;
+        document.getElementById("stopBtn").disabled = false;
+        document.getElementById("result").innerText = "Mouse-ul se mișcă...";
+
+        pollingRateInterval = setInterval(calculatePollingRate, 500);
+      }
+    }
+
+    function stopTest() {
+      if (isTesting) {
+        isTesting = false;
+        clearInterval(pollingRateInterval);
+        document.getElementById("startBtn").disabled = false;
+        document.getElementById("stopBtn").disabled = true;
+        document.getElementById("result").innerText = "";
+      }
+    }
+
+    function calculatePollingRate() {
+      startTime = performance.now();
+      setTimeout(function() {
+        endTime = performance.now();
+        var pollingRate = 1000 / (endTime - startTime);
+        document.getElementById("result").innerText = "Rata de sondaj a mouse-ului este aproximativ: " + pollingRate.toFixed(2) + " Hz";
+      }, 0);
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startTest);
+    document.getElementById("stopBtn").addEventListener("click", stopTest);
+  </script>
+</body>
+</html>
